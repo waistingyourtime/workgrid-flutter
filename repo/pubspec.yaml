@@ -1,6 +1,7 @@
-name: workgrid_flutter
-description: WorkGrid scheduling app (final MVP)
-publish_to: "none"
+name: workgrid
+description: Прототип приложения для управления проектами и рабочими объектами
+publish_to: 'none' # приватный проект, не публикуем
+
 version: 1.0.0+1
 
 environment:
@@ -9,13 +10,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.2.2
-  cupertino_icons: ^1.0.8
+
+  # стандартные пакеты
+  cupertino_icons: ^1.0.6
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.0
+
+  flutter_lints: ^3.0.1
 
 flutter:
   uses-material-design: true
