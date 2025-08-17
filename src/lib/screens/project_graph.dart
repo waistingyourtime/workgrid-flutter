@@ -23,17 +23,31 @@ class _ProjectGraphScreenState extends State<ProjectGraphScreen> {
     }
   }
 
-  void addHourBefore(String user) {
+  void _insertHourForAllBefore(int newHour) {
+    // вставляем новый час в начало и добавляем Cell всем пользователям
+    for (final u in users) {
+      grid[u]!.insert(0, Cell());
+    }
+    hours.insert(0, newHour);
+  }
+
+  void _appendHourForAllAfter(int newHour) {
+    // добавляем час в конец и добавляем Cell всем пользователям
+    for (final u in users) {
+      grid[u]!.add(Cell());
+    }
+    hours.add(newHour);
+  }
+
+  void addHourBefore() {
     setState(() {
-      hours.insert(0, hours.first - 1);
-      grid[user]!.insert(0, Cell());
+      _insertHourForAllBefore(hours.first - 1);
     });
   }
 
-  void addHourAfter(String user) {
+  void addHourAfter() {
     setState(() {
-      hours.add(hours.last + 1);
-      grid[user]!.add(Cell());
+      _appendHourForAllAfter(hours.last + 1);
     });
   }
 
@@ -62,7 +76,12 @@ class _ProjectGraphScreenState extends State<ProjectGraphScreen> {
           width: 120,
           child: Tooltip(
             message: user,
-            child: Text(user, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600)),
+            child: Text(
+              user,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
           ),
         );
 
@@ -74,7 +93,11 @@ class _ProjectGraphScreenState extends State<ProjectGraphScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               nameCell(user),
-              IconButton(icon: const Icon(Icons.add_circle_outline), tooltip: 'Добавить час перед началом', onPressed: () => addHourBefore(user)),
+              IconButton(
+                icon: const Icon(Icons.add_circle_outline),
+                tooltip: 'Добавить час перед началом',
+                onPressed: addHourBefore,
+              ),
               ...List.generate(hours.length, (i) {
                 final cell = grid[user]![i];
                 return GestureDetector(
@@ -88,7 +111,11 @@ class _ProjectGraphScreenState extends State<ProjectGraphScreen> {
                   ),
                 );
               }),
-              IconButton(icon: const Icon(Icons.add_circle_outline), tooltip: 'Добавить час после конца', onPressed: () => addHourAfter(user)),
+              IconButton(
+                icon: const Icon(Icons.add_circle_outline),
+                tooltip: 'Добавить час после конца',
+                onPressed: addHourAfter,
+              ),
             ],
           );
         }).toList(),
