@@ -1,5 +1,5 @@
 name: workgrid_flutter
-description: Demo app for task scheduling
+description: WorkGrid scheduling app (stable)
 publish_to: "none"
 version: 1.0.0+1
 
@@ -10,6 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   shared_preferences: ^2.2.2
+  cupertino_icons: ^1.0.8
 
 dev_dependencies:
   flutter_test:
