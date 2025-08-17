@@ -137,11 +137,11 @@ class ObjectEditor extends StatefulWidget {
 }
 
 class _ObjectEditorState extends State<ObjectEditor> {
-  String newTask = '';
-  String newResource = '';
-
   @override
   Widget build(BuildContext context) {
+    String newTask = '';
+    String newResource = '';
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.obj.title)),
       body: ListView(
@@ -163,8 +163,7 @@ class _ObjectEditorState extends State<ObjectEditor> {
             onSubmitted: (v) {
               if (v.isNotEmpty) {
                 setState(() {
-                  widget.obj.tasks
-                      .add(NoteItem(id: UniqueKey().toString(), text: v));
+                  widget.obj.tasks.add(NoteItem(id: UniqueKey().toString(), text: v));
                 });
               }
             },
@@ -186,8 +185,7 @@ class _ObjectEditorState extends State<ObjectEditor> {
             onSubmitted: (v) {
               if (v.isNotEmpty) {
                 setState(() {
-                  widget.obj.resources
-                      .add(NoteItem(id: UniqueKey().toString(), text: v));
+                  widget.obj.resources.add(NoteItem(id: UniqueKey().toString(), text: v));
                 });
               }
             },
