@@ -15,8 +15,6 @@ class _CellEditorState extends State<CellEditor> {
   String newObjectName = '';
 
   void addObject() async {
-    // Диалог выбора существующего объекта – в MVP пропустим,
-    // добавляем новый по введённому названию
     if (newObjectName.isEmpty) return;
     final newObj = WorkObject(id: UniqueKey().toString(), title: newObjectName);
     setState(() {
@@ -65,33 +63,46 @@ class _CellEditorState extends State<CellEditor> {
                       itemCount: objects.length,
                       itemBuilder: (_, i) {
                         final obj = objects[i];
-                        return ListTile(
-                          title: Text(obj.title),
-                          trailing: const Icon(Icons.chevron_right),
-                          onTap: () {
-                            Navigator.push(
+                        return GestureDetector(
+                          onTap: () async {
+                            await Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => ObjectEditor(obj: obj)),
-                            ).then((_) => setState(() {}));
+                              MaterialPageRoute(
+                                builder: (_) => ObjectEditor(obj: obj),
+                              ),
+                            );
+                            if (!mounted) return;
+                            setState(() {});
                           },
                           onLongPressStart: (details) async {
                             final selected = await showMenu<String>(
                               context: context,
                               position: RelativeRect.fromLTRB(
-                                details.globalPosition.dx, details.globalPosition.dy,
-                                details.globalPosition.dx, details.globalPosition.dy,
+                                details.globalPosition.dx,
+                                details.globalPosition.dy,
+                                details.globalPosition.dx,
+                                details.globalPosition.dy,
                               ),
                               items: const [
-                                PopupMenuItem(value: 'edit', child: Text('Редактировать')),
-                                PopupMenuItem(value: 'delete', child: Text('Удалить')),
+                                PopupMenuItem(
+                                  value: 'edit',
+                                  child: Text('Редактировать'),
+                                ),
+                                PopupMenuItem(
+                                  value: 'delete',
+                                  child: Text('Удалить'),
+                                ),
                               ],
                             );
+                            if (!mounted) return;
                             if (selected == 'edit') {
-                              if (!context.mounted) return;
                               await Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => ObjectEditor(obj: obj)),
+                                MaterialPageRoute(
+                                  builder: (_) => ObjectEditor(obj: obj),
+                                ),
                               );
+                              if (!mounted) return;
                               setState(() {});
                             } else if (selected == 'delete') {
                               setState(() {
@@ -102,6 +113,10 @@ class _CellEditorState extends State<CellEditor> {
                               });
                             }
                           },
+                          child: ListTile(
+                            title: Text(obj.title),
+                            trailing: const Icon(Icons.chevron_right),
+                          ),
                         );
                       },
                     ),
@@ -132,35 +147,47 @@ class _ObjectEditorState extends State<ObjectEditor> {
       body: ListView(
         padding: const EdgeInsets.all(12),
         children: [
-          const Text("Задания", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ...widget.obj.tasks.map((t) => CheckboxListTile(
-                value: t.done,
-                onChanged: (_) => setState(() => t.done = !t.done),
-                title: Text(t.text),
-              )),
+          const Text(
+            "Задания",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          ...widget.obj.tasks.map(
+            (t) => CheckboxListTile(
+              value: t.done,
+              onChanged: (_) => setState(() => t.done = !t.done),
+              title: Text(t.text),
+            ),
+          ),
           TextField(
             decoration: const InputDecoration(labelText: 'Новое задание'),
             onSubmitted: (v) {
               if (v.isNotEmpty) {
                 setState(() {
-                  widget.obj.tasks.add(NoteItem(id: UniqueKey().toString(), text: v));
+                  widget.obj.tasks
+                      .add(NoteItem(id: UniqueKey().toString(), text: v));
                 });
               }
             },
           ),
           const SizedBox(height: 16),
-          const Text("Ресурсы", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-          ...widget.obj.resources.map((r) => CheckboxListTile(
-                value: r.done,
-                onChanged: (_) => setState(() => r.done = !r.done),
-                title: Text(r.text),
-              )),
+          const Text(
+            "Ресурсы",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          ...widget.obj.resources.map(
+            (r) => CheckboxListTile(
+              value: r.done,
+              onChanged: (_) => setState(() => r.done = !r.done),
+              title: Text(r.text),
+            ),
+          ),
           TextField(
             decoration: const InputDecoration(labelText: 'Новый ресурс'),
             onSubmitted: (v) {
               if (v.isNotEmpty) {
                 setState(() {
-                  widget.obj.resources.add(NoteItem(id: UniqueKey().toString(), text: v));
+                  widget.obj.resources
+                      .add(NoteItem(id: UniqueKey().toString(), text: v));
                 });
               }
             },
