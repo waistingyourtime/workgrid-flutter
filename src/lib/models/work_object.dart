@@ -10,8 +10,9 @@ class WorkObject {
   WorkObject({
     required this.id,
     required this.title,
-    this.tasks = const [],
-    this.resources = const [],
+    List<NoteItem>? tasks,
+    List<NoteItem>? resources,
     this.assignedTo,
-  });
+  })  : tasks = tasks ?? <NoteItem>[],
+        resources = resources ?? <NoteItem>[];
 }
