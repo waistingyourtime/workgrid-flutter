@@ -13,27 +13,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Set up Java
-        uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '17'
-          cache: 'gradle'
-
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
           cache: true
 
-      - name: Create Flutter scaffold
+      # Сначала создаём проект и копируем наши файлы,
+      # чтобы появились android/* и gradle-файлы
+      - name: Create Flutter scaffold and copy sources
         run: |
           flutter --version
           flutter create . --project-name workgrid
-          # Переносим наши файлы из src/ поверх сгенерированных
+          # Переносим наши исходники из src/ поверх сгенерированных
           cp -v src/pubspec.yaml pubspec.yaml
           mkdir -p lib
           cp -vr src/lib/* lib/
+
+      # Теперь gradle-файлы уже есть → можно настраивать Java с кешем Gradle
+      - name: Set up Java (with Gradle cache)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
 
       - name: Get packages
         run: flutter pub get
