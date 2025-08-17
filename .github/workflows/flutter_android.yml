@@ -8,23 +8,27 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      # Java 17 требуется для современных Android Gradle Plugin
+      - name: Set up Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+          cache: true
 
-      - name: Create Flutter scaffold
-        run: |
-          flutter --version
-          flutter create . --project-name workgrid_flutter
-          rm -f lib/main.dart
-          rm -f pubspec.yaml
-          cp -v repo/lib/main.dart lib/main.dart
-          cp -v repo/pubspec.yaml pubspec.yaml
+      - name: Flutter doctor (optional)
+        run: flutter --version
 
       - name: Get packages
         run: flutter pub get
