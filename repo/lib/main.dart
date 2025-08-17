@@ -548,7 +548,7 @@ class _ChecklistScreenState extends State<ChecklistScreen> {
               itemBuilder: (_, i) {
                 final it = items[i];
                 return Dismissible(
-                  key: ValueKey('item_$i_${it.text}'),
+                  key: ValueKey('item_${i}_${it.text}'),
                   background: Container(color: Colors.red),
                   onDismissed: (_) => _removeAt(i),
                   child: CheckboxListTile(
